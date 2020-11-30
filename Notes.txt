@@ -1,0 +1,158 @@
+﻿            //const string googleLabel = "Google: ";
+            const string googleAdr = "8.8.8.8";
+            //const string openDnsLabel = "OpenDNS: ";
+            const string openDnsAdr = "208.67.222.222";
+            //const string cloudFlareLabel = "CloudFlare: ";
+            const string cloudFlareAdr = "1.1.1.1";
+            
+            string openDnsRes = ReturnPingResult(openDnsAdr, timeout);
+                    if (!openDnsRes.Contains(PingNonSuccessMarker)) { outageIsOngoing = false; OutResultOnCount(openDnsRes, count); }
+                    else { fails += 1; OutOnFail(openDnsRes); }
+
+                    string cloudFlareRes = ReturnPingResult(cloudFlareAdr, timeout);
+                    if (!cloudFlareRes.Contains(PingNonSuccessMarker)) { outageIsOngoing = false; OutResultOnCount(cloudFlareRes, count); }
+                    else { fails += 1; OutOnFail(cloudFlareRes); }
+                    
+                    static uint str2ip(string ip)
+    {
+        string[] octets = ip.Split('.');
+
+        uint x1 = (uint)(Convert.ToByte(octets[0]) << 24);
+        uint x2 = (uint)(Convert.ToByte(octets[1]) << 16);
+        uint x3 = (uint)(Convert.ToByte(octets[2]) << 8);
+        uint x4 = (uint)(Convert.ToByte(octets[3]));
+
+        return x1 + x2 + x3 + x4;
+    }
+    static string ip2str(uint ip)
+    {
+        string s1 = ((ip & 0xff000000) >> 24).ToString() + ".";
+        string s2 = ((ip & 0x00ff0000) >> 16).ToString() + ".";
+        string s3 = ((ip & 0x0000ff00) >> 8).ToString() + ".";
+        string s4 = (ip & 0x000000ff).ToString();
+
+        string ip2 = s1 + s2 + s3 + s4;
+        return ip2;
+    }
+
+    static string GetMacAddress(string ipAddress)
+    {
+        string macAddress = string.Empty;
+        System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+        pProcess.StartInfo.FileName = "arp";
+        pProcess.StartInfo.Arguments = "-a " + ipAddress;
+        pProcess.StartInfo.UseShellExecute = false;
+        pProcess.StartInfo.RedirectStandardOutput = true;
+        pProcess.StartInfo.CreateNoWindow = true;
+        pProcess.Start();
+        string strOutput = pProcess.StandardOutput.ReadToEnd();
+        string[] substrings = strOutput.Split('-');
+        if (substrings.Length >= 8)
+        {
+            macAddress = substrings[3].Substring(Math.Max(0, substrings[3].Length - 2))
+                     + "-" + substrings[4] + "-" + substrings[5] + "-" + substrings[6]
+                     + "-" + substrings[7] + "-"
+                     + substrings[8].Substring(0, 2);
+            return macAddress;
+        }
+
+        else
+        {
+            return "not found";
+        }
+    }
+
+
+
+        //static void DoPing(string ipAddress)
+    //{
+    //    try
+    //    {
+    //        uint startIP = str2ip(ipAddress);
+    //        //uint endIP = str2ip(txtTo.Text);
+    //        //DataTable pingResults = new DataTable();
+    //        //pingResults.Columns.Add("Date");
+    //        //pingResults.Columns.Add("IP Address");
+    //        //pingResults.Columns.Add("Mac Address");
+    //        //pingResults.Columns.Add("Result");
+    //        //slow part
+    //        //for (uint currentIP = startIP; currentIP <= endIP; currentIP++)
+    //        //{
+    //        //    string thisIP = ip2str(currentIP);
+
+    //            Ping ping = new Ping();
+    //            PingReply pingReply = ping.Send(thisIP.ToString());
+
+
+    //            var message = (pingReply.Status == IPStatus.Success) ? "On" : "Off";
+    //            //pingResults.Rows.Add(DateTime.Now.ToShortDateString(), thisIP.ToString(), GetMacAddress(thisIP), message.ToString());
+
+    //        //}
+    //        dataGridView1.DataSource = pingResults;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        MessageBox.Show(ex.ToString());
+    //    }
+    //}
+
+} // End Class
+
+//private volatile DataTable pingResults = new DataTable();
+////And I use str2ip in the button click event which contains this:
+//private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+//{
+//    try
+//    {
+//        pingResults.Clear();
+//        uint startIP = str2ip(txtFrom.Text);
+//        uint endIP = str2ip(txtTo.Text);
+//        Parallel.For(startIP, endIP, index => pingIpAddress(ip2str(startIP++)));
+//        Thread.Sleep(1000);
+//        //for (uint currentIP = startIP; currentIP <= endIP; currentIP++)
+//        //  {
+//        //      string thisIP = ip2str(currentIP);
+//        //      Thread myNewThread = new Thread(() => pingIpAddress(thisIP));
+//        //      myNewThread.Start();
+
+//        //  }
+//        dataGridView1.DataSource = pingResults;
+
+//    }
+//    catch (Exception ex)
+//    {
+//        MessageBox.Show(String.Format("Exception {0} Trace {1}", ex.Message, ex.StackTrace));
+//    }
+//}
+//private void pingIpAddress(string ip3)
+//{//this method is where I ping the IP addresses
+//    try
+//    {
+//        string ip2 = ip3;
+//        Ping ping = new Ping();
+//        PingReply pingReply = ping.Send(ip2.ToString());
+//        var message = (pingReply.Status == IPStatus.Success) ? "On" : "Off";
+//        lock (pingResults.Rows.SyncRoot)
+//        {
+//            AddToDataTable(ip2, message);
+//        }
+//    }
+//    catch (Exception ex)
+//    {
+
+//        MessageBox.Show(String.Format("Exception {0} Trace {1}", ex.Message, ex.StackTrace));
+//    }
+//}
+//private void AddToDataTable(string ip2, string msg)
+//{
+//    try
+//    {
+//        pingResults.Rows.Add(DateTime.Now.ToShortDateString(), ip2, GetMacAddress(ip2), msg.ToString(), GetMachineNameFromIPAddress(ip2));
+
+//    }
+//    catch (Exception)
+//    {
+
+//        throw;
+//    }
+//}
