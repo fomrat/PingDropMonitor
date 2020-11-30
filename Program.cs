@@ -11,7 +11,7 @@ namespace PingDropMonitor
     static class Program
     {
         const string dateTimeFormat = "MM/dd/yyyy HH:mm:ss";
-        const string PingNonSuccessMarker = "RETURN_STATUS_OTHER_THAN_SUCCESS";
+        //const string PingNonSuccessMarker = "RETURN_STATUS_OTHER_THAN_SUCCESS";
 
         static StreamWriter sw;
         static DateTime lastOutageStart = DateTime.Now;
@@ -20,17 +20,18 @@ namespace PingDropMonitor
 
         static void Main()
         {
-            const int timeout = 2000; // wait 2 seconds for a ping response
-            const int sleepMs = 5000; // sleep 2 seconds before another ping round
-            const string header = "Address,RoundTrip time,Time to live,Don't fragment,Buffer size";
+            int timeoutMS = Properties.Settings.Default.timeOutMS;  // wait for a ping response
+            int sleepMS = Properties.Settings.Default.sleepMS;      // sleep before another ping round
+            //const string header = "Address (Google DNS, OpenDNS, CloudFlare DNS),RoundTrip time,Time to live,Don't fragment,Buffer size";
 
             bool outageIsOngoing = false;
-            bool outageTimingIsOn = false; 
+            bool outageTimingIsOn = false;
+            bool DisplayedOutage = false;
 
-            Console.WriteLine(header);
+            // Console.WriteLine(header);
             string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string fileName = Path.Combine(docPath, DateTime.Now.ToFileTimeUtc() + "-log.txt");
-
+            Console.Title = "Began: " + DateTime.Now.ToString(dateTimeFormat);
             while (true)
             {
                 sw = File.AppendText(fileName);
@@ -40,17 +41,26 @@ namespace PingDropMonitor
 
                     foreach (string addr in Properties.Settings.Default.ipAddresses)
                     {
-                        if (ReturnPingResult(addr, timeout, ref message))
+                        if (ReturnPingResult(addr, timeoutMS, ref message)) 
                         {   outageIsOngoing = false; Out(message); }
                         else
-                        {   fails += 1; Out(message); }
+                        {   
+                            fails += 1;
+                        if (outageIsOngoing && !DisplayedOutage)
+                            {
+                                Out(message + " Outage ongoing..."); 
+  
+                                    DisplayedOutage = true;
+                            }
+
+                        }
                     }
 
-                    if (fails > Properties.Settings.Default.ipAddresses.Count && !outageIsOngoing)
+                    if (fails > Properties.Settings.Default.ipAddresses.Count - 1 && !outageIsOngoing)
                     {   lastOutageStart = DateTime.Now;
                         outageIsOngoing = true;
                         outageTimingIsOn = true;
-                        Out("OUTAGE"); 
+                        Out("OUTAGE ongoing..."); 
                     }
 
                     if (outageTimingIsOn && (!outageIsOngoing))
@@ -63,7 +73,7 @@ namespace PingDropMonitor
 
                     sw.Close();
                 }
-                System.Threading.Thread.Sleep(sleepMs);
+                System.Threading.Thread.Sleep(sleepMS);
             }
         }
 
@@ -83,7 +93,6 @@ namespace PingDropMonitor
             Ping pingSender = new Ping();
 
             // Create a buffer of 32 bytes of data to be transmitted.
-
             const string data = "12345678901234567890123456789012";
             byte[] buffer = Encoding.ASCII.GetBytes(data);
 
@@ -91,7 +100,6 @@ namespace PingDropMonitor
             PingOptions options = new PingOptions(64, true);
 
             // Send the request.
-
             try
             {
                 PingReply reply = pingSender.Send(ipAddress, timeout, buffer, options);
@@ -104,7 +112,8 @@ namespace PingDropMonitor
                 }
                 else
                 {
-                    message = ipAddress + "," + reply.Status.ToString() + "," + PingNonSuccessMarker;
+                    message = ipAddress + "," + reply.Status.ToString();
+                    // + "," + PingNonSuccessMarker;
                     return false;
                 }
             }
