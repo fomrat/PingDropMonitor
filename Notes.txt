@@ -1,4 +1,10 @@
-﻿            //const string googleLabel = "Google: ";
+﻿            if (outageIsOngoing && !DisplayedOutage)
+            {
+                ToScreen("Outage ongoing...");
+                DisplayedOutage = true;
+            }
+                                
+            //const string googleLabel = "Google: ";
             const string googleAdr = "8.8.8.8";
             //const string openDnsLabel = "OpenDNS: ";
             const string openDnsAdr = "208.67.222.222";

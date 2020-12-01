@@ -48,10 +48,19 @@ namespace PingDropMonitor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
         public int sleepMS {
             get {
                 return ((int)(this["sleepMS"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int outputEvery {
+            get {
+                return ((int)(this["outputEvery"]));
             }
         }
     }
