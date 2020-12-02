@@ -17,7 +17,10 @@ namespace PingDropMonitor
             int sleepMS = Properties.Settings.Default.sleepMS;      // sleep before another ping round
             bool outageIsOngoing = false;
             bool outageTimingIsOn = false;
-            string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            bool outageJustEnded = true;
+            bool ranOnceAfterDisplayedOutageTime = false;
+            string docPath = Properties.Settings.Default.outputFolder;
+                // Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string fileName = Path.Combine(docPath, DateTime.Now.ToFileTimeUtc() + "-log.txt");
             int count = 0;
             string message = "";
@@ -26,6 +29,8 @@ namespace PingDropMonitor
 
             using (StreamWriter sw = new StreamWriter(fileName, append: true))
             {
+                ToScreen(Console.Title);
+                ToLog(sw, Console.Title);
                 while (true)
                 {
                     // At the beginning of each pass checking 'n' addresses 
@@ -39,18 +44,29 @@ namespace PingDropMonitor
                     {
                         if (ReturnPingResult(addr, timeoutMS, ref message))
                         {
-                            outageIsOngoing = false;
-                            if ((count % Properties.Settings.Default.outputEvery) == 0)
+                            if (outageIsOngoing)
                             {
+                                outageIsOngoing = false;
+                                outageJustEnded = true; // this will let us display all n pings before setting to false
+                            }
+                            //if (outageJustEnded | ranOnceAfterDisplayedOutageTime)
+                            //{
                                 ToLog(sw, message);
                                 ToScreen(message);
-                            }
+                            //}
                         }
                         else
                         {
                             fails += 1;
+                            //if (!outageIsOngoing) // log the first failure pass of n pings; when we check for an outage below, we'll set to true if n fails 
+                            //{
+                                ToLog(sw, message);
+                                ToScreen(message);
+                            //}
                         }
                     }
+                    outageJustEnded = false; // only now, after displaying all n pings, can we set to true
+                    ranOnceAfterDisplayedOutageTime = false;
 
                     //
                     // If every ping in the group failed, and we're not yet in an outage...
@@ -61,6 +77,7 @@ namespace PingDropMonitor
                         // ... and we've begun timing it.
                         outageIsOngoing = true;
                         outageTimingIsOn = true;
+                        ToLog(sw, "Outage ongoing...");
                         ToScreen("Outage ongoing...");
                     }
 
@@ -73,8 +90,10 @@ namespace PingDropMonitor
                         ToLog(sw, "Outage time was: " + lastOutageLength.TotalSeconds + " seconds");
                         ToScreen("Outage time was: " + lastOutageLength.TotalSeconds + " seconds");
                         Console.Title = "Last outage ended: " + lastOutageStop.ToString(dateTimeFormat) + " and was: " + lastOutageLength.TotalSeconds;
+                        ranOnceAfterDisplayedOutageTime = true;
                     }
                     count += 1;
+                    sw.Flush();
                     System.Threading.Thread.Sleep(sleepMS);
                 }
             }
@@ -100,7 +119,7 @@ namespace PingDropMonitor
             {   PingReply reply = pingSender.Send(ipAddress, timeout, buffer, options);
 
                 if (reply.Status == IPStatus.Success)
-                {   message = reply.Address.ToString() + "," + reply.RoundtripTime.ToString();
+                {   message = reply.Address.ToString() + "," + reply.RoundtripTime.ToString() + "," + reply.Options.Ttl;
                     return true; }
                 else
                 {   message = ipAddress + "," + reply.Status.ToString();                  

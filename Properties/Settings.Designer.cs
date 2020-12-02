@@ -57,7 +57,16 @@ namespace PingDropMonitor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Google Drive\\PingDropMonitor")]
+        public string outputFolder {
+            get {
+                return ((string)(this["outputFolder"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
         public int outputEvery {
             get {
                 return ((int)(this["outputEvery"]));

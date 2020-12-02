@@ -16,8 +16,11 @@
     <Setting Name="sleepMS" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">5000</Value>
     </Setting>
+    <Setting Name="outputFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\Google Drive\PingDropMonitor</Value>
+    </Setting>
     <Setting Name="outputEvery" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">12</Value>
     </Setting>
   </Settings>
 </SettingsFile>
