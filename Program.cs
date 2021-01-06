@@ -87,8 +87,8 @@ namespace PingDropMonitor
                         lastOutageStop = DateTime.Now;
                         outageTimingIsOn = false;
                         lastOutageLength = lastOutageStop.Subtract(lastOutageStart);
-                        ToLog(sw, "Outage time was: " + lastOutageLength.TotalSeconds + " seconds");
-                        ToScreen("Outage time was: " + lastOutageLength.TotalSeconds + " seconds");
+                        ToLog(sw, ">> Outage time was: " + lastOutageLength.TotalSeconds + " seconds");
+                        ToScreen(">> Outage time was: " + lastOutageLength.TotalSeconds + " seconds");
                         Console.Title = "Last outage ended: " + lastOutageStop.ToString(dateTimeFormat) + " and was: " + lastOutageLength.TotalSeconds;
                         ranOnceAfterDisplayedOutageTime = true;
                     }
@@ -119,14 +119,14 @@ namespace PingDropMonitor
             {   PingReply reply = pingSender.Send(ipAddress, timeout, buffer, options);
 
                 if (reply.Status == IPStatus.Success)
-                {   message = reply.Address.ToString() + "," + reply.RoundtripTime.ToString() + "," + reply.Options.Ttl;
+                { message = reply.Address.ToString() + "," + reply.RoundtripTime.ToString() + "ms"; //," + reply.Options.Ttl;
                     return true; }
                 else
                 {   message = ipAddress + "," + reply.Status.ToString();                  
                     return false; }
             }
             catch (Exception ex)
-            {   message = "Exception occurred." + ex.Message;
+            {   message = "Unable to ping " + ipAddress;
                 return false; }
         }
     }

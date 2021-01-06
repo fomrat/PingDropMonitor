@@ -48,15 +48,6 @@ namespace PingDropMonitor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
-        public int sleepMS {
-            get {
-                return ((int)(this["sleepMS"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:\\Google Drive\\PingDropMonitor")]
         public string outputFolder {
             get {
@@ -70,6 +61,15 @@ namespace PingDropMonitor.Properties {
         public int outputEvery {
             get {
                 return ((int)(this["outputEvery"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15000")]
+        public int sleepMS {
+            get {
+                return ((int)(this["sleepMS"]));
             }
         }
     }
