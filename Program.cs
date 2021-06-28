@@ -5,20 +5,20 @@ using System.Text;
 
 namespace PingDropMonitor
 {
-    static class Program
+    internal static class Program
     {
-        const string dateTimeFormat = "MM/dd/yyyy HH:mm:ss";
-        static DateTime lastOutageStart = DateTime.Now;
-        static DateTime lastOutageStop = DateTime.Now;
-        static TimeSpan lastOutageLength;
-        static void Main()
+        private const string dateTimeFormat = "MM/dd/yyyy HH:mm:ss";
+        private static DateTime lastOutageStart = DateTime.Now;
+        private static DateTime lastOutageStop = DateTime.Now;
+        private static TimeSpan lastOutageLength;
+        private static void Main()
         {
             int timeoutMS = Properties.Settings.Default.timeOutMS;  // wait for a ping response
             int sleepMS = Properties.Settings.Default.sleepMS;      // sleep before another ping round
             bool outageIsOngoing = false;
             bool outageTimingIsOn = false;
-            bool outageJustEnded = true;
-            bool ranOnceAfterDisplayedOutageTime = false;
+            //bool outageJustEnded = true;
+            //bool ranOnceAfterDisplayedOutageTime = false;
             string docPath = Properties.Settings.Default.outputFolder;
                 // Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string fileName = Path.Combine(docPath, DateTime.Now.ToFileTimeUtc() + "-log.txt");
@@ -47,7 +47,7 @@ namespace PingDropMonitor
                             if (outageIsOngoing)
                             {
                                 outageIsOngoing = false;
-                                outageJustEnded = true; // this will let us display all n pings before setting to false
+                                //outageJustEnded = true; // this will let us display all n pings before setting to false
                             }
                             //if (outageJustEnded | ranOnceAfterDisplayedOutageTime)
                             //{
@@ -57,7 +57,7 @@ namespace PingDropMonitor
                         }
                         else
                         {
-                            fails += 1;
+                            fails++;
                             //if (!outageIsOngoing) // log the first failure pass of n pings; when we check for an outage below, we'll set to true if n fails 
                             //{
                                 ToLog(sw, message);
@@ -65,8 +65,8 @@ namespace PingDropMonitor
                             //}
                         }
                     }
-                    outageJustEnded = false; // only now, after displaying all n pings, can we set to true
-                    ranOnceAfterDisplayedOutageTime = false;
+                    //outageJustEnded = false; // only now, after displaying all n pings, can we set to true
+                    //ranOnceAfterDisplayedOutageTime = false;
 
                     //
                     // If every ping in the group failed, and we're not yet in an outage...
@@ -90,9 +90,9 @@ namespace PingDropMonitor
                         ToLog(sw, ">> Outage time was: " + lastOutageLength.TotalSeconds + " seconds");
                         ToScreen(">> Outage time was: " + lastOutageLength.TotalSeconds + " seconds");
                         Console.Title = "Last outage ended: " + lastOutageStop.ToString(dateTimeFormat) + " and was: " + lastOutageLength.TotalSeconds;
-                        ranOnceAfterDisplayedOutageTime = true;
+                        //ranOnceAfterDisplayedOutageTime = true;
                     }
-                    count += 1;
+                    count++;
                     sw.Flush();
                     System.Threading.Thread.Sleep(sleepMS);
                 }
@@ -122,10 +122,10 @@ namespace PingDropMonitor
                 { message = reply.Address.ToString() + "," + reply.RoundtripTime.ToString() + "ms"; //," + reply.Options.Ttl;
                     return true; }
                 else
-                {   message = ipAddress + "," + reply.Status.ToString();                  
+                {   message = ipAddress + "," + reply.Status.ToString();
                     return false; }
             }
-            catch (Exception ex)
+            catch
             {   message = "Unable to ping " + ipAddress;
                 return false; }
         }
