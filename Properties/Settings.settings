@@ -14,7 +14,7 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="outputFolder" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">D:\Google Drive\PingDropMonitor</Value>
+      <Value Profile="(Default)">D:\nxt.fomrat.com\SyncDrive\PingDropMonitor</Value>
     </Setting>
     <Setting Name="outputEvery" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">12</Value>

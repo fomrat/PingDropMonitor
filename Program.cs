@@ -19,8 +19,13 @@ namespace PingDropMonitor
             bool outageTimingIsOn = false;
             //bool outageJustEnded = true;
             //bool ranOnceAfterDisplayedOutageTime = false;
+
             string docPath = Properties.Settings.Default.outputFolder;
-                // Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (!File.Exists(docPath))
+            {
+                docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
+
             string fileName = Path.Combine(docPath, DateTime.Now.ToFileTimeUtc() + "-log.txt");
             int count = 0;
             string message = "";
