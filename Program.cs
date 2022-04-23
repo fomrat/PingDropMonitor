@@ -32,7 +32,7 @@ namespace PingDropMonitor
 
             Console.Title = "Began: " + DateTime.Now.ToString(dateTimeFormat);
 
-            using (StreamWriter sw = new StreamWriter(fileName, append: true))
+            using (StreamWriter sw = new StreamWriter(fileName, append: true))// by Using, the stream will be flushed and closed even on an exception 
             {
                 ToScreen(Console.Title);
                 ToLog(sw, Console.Title);
@@ -98,7 +98,7 @@ namespace PingDropMonitor
                         //ranOnceAfterDisplayedOutageTime = true;
                     }
                     count++;
-                    sw.Flush();
+                    sw.Flush();                    
                     System.Threading.Thread.Sleep(sleepMS);
                 }
             }
