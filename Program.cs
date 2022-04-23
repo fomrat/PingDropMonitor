@@ -21,7 +21,7 @@ namespace PingDropMonitor
             //bool ranOnceAfterDisplayedOutageTime = false;
 
             string docPath = Properties.Settings.Default.outputFolder;
-            if (!File.Exists(docPath))
+            if (!Directory.Exists(docPath))
             {
                 docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
