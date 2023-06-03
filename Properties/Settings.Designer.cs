@@ -12,7 +12,7 @@ namespace PingDropMonitor.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,33 +25,10 @@ namespace PingDropMonitor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <string>1.1.1.1</string>
-  <string>8.8.8.8</string>
-  <string>208.67.222.222</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection ipAddresses {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["ipAddresses"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1000")]
         public int timeOutMS {
             get {
                 return ((int)(this["timeOutMS"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\nxt.fomrat.com\\SyncDrive\\PingDropMonitor")]
-        public string outputFolder {
-            get {
-                return ((string)(this["outputFolder"]));
             }
         }
         
@@ -70,6 +47,29 @@ namespace PingDropMonitor.Properties {
         public int sleepMS {
             get {
                 return ((int)(this["sleepMS"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>1.1.1.1</string>
+  <string>8.8.8.8</string>
+  <string>208.67.222.222</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection ipAddresses {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["ipAddresses"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Documents\\PingDropMonitor")]
+        public string outputFolder {
+            get {
+                return ((string)(this["outputFolder"]));
             }
         }
     }

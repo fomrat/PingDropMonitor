@@ -11,6 +11,9 @@ namespace PingDropMonitor
         private static DateTime lastOutageStart = DateTime.Now;
         private static DateTime lastOutageStop = DateTime.Now;
         private static TimeSpan lastOutageLength;
+
+        public static string DateTimeFormat => dateTimeFormat;
+
         private static void Main()
         {
             int timeoutMS = Properties.Settings.Default.timeOutMS;  // wait for a ping response
@@ -32,11 +35,12 @@ namespace PingDropMonitor
             int count = 0;
             string message = "";
 
-            Console.Title = "Began: " + DateTime.Now.ToString(dateTimeFormat);
+            Console.Title = $"Began: {DateTime.Now.ToString(dateTimeFormat)}";
 
             using (StreamWriter sw = new StreamWriter(fileName, append: true))// by Using, the stream will be flushed and closed even on an exception 
             {
                 ToScreen(Console.Title);
+                ToScreen($"Logging to: {fileName}");
                 ToLog(sw, Console.Title);
                 while (true)
                 {
@@ -47,9 +51,9 @@ namespace PingDropMonitor
                     //
                     // Try all addresses in group
                     ///
-                    foreach (string addr in Properties.Settings.Default.ipAddresses)
+                    foreach (string address in Properties.Settings.Default.ipAddresses)
                     {
-                        if (ReturnPingResult(addr, timeoutMS, ref message))
+                        if (ReturnPingResult(address, timeoutMS, ref message))
                         {
                             if (outageIsOngoing)
                             {
