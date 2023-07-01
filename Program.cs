@@ -29,8 +29,6 @@ namespace PingDropMonitor
                 docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
 
-// function to validate an email with regex and comment each line
-
             string fileName = Path.Combine(docPath, DateTime.Now.ToFileTimeUtc() + "-log.txt");
             int count = 0;
             string message = "";
